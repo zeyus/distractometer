@@ -37,3 +37,8 @@ class Transaction(models.Model):
     def __unicode__(self):
         return str(self.time) + ' ' + self.person.name
 
+class Settings(models.Model):
+    name = models.CharField(max_length=50,unique=True)
+    value = models.TextField()
+    def __unicode__(self):
+        return self.name

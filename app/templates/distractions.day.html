@@ -1,2 +1,19 @@
-<div id="chart_div" style="width:400; height:300"></div>
+<script type="text/javascript">
+    google.setOnLoadCallback(drawVisualization);
+    function drawVisualization() {
+        // Create and populate the data table.
+        var data = google.visualization.arrayToDataTable({{day|safe}});
 
+        // Create and draw the visualization.
+        new google.visualization.ColumnChart(document.getElementById('distractions_day')).draw(data,
+            {title:null,
+            width:'100%', height:'100%',
+            hAxis: {},
+            isStacked:true,
+            vAxis: {maxValue:{{max_seconds}},textPosition:'none',baselineColor:'#ffffff',gridlines:{count:0}},
+            legend: {position:'none'},
+            series: {{day_colors|safe}}
+            }
+        );
+    }
+</script>
