@@ -1,5 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+import datetime
 from .models import Distraction, Person, Settings
 from django.db.models import Sum
 import json
@@ -7,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 def index(request):
 
-    distractions = list(Distraction.objects.values('person').annotate(duration=Sum('duration')))
+    distractions = list(Distraction.objects.values('person').filter(time__gte=datetime.date.today()).annotate(duration=Sum('duration')))
 #    distraction_day = json.dumps(distractions)
     distraction_day_data = [
         ['Range'],
