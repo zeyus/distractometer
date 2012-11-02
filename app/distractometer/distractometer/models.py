@@ -1,3 +1,5 @@
+import datetime, json
+from django.db.models import Sum
 from django.db import models
 
 class Person(models.Model):
@@ -14,6 +16,34 @@ class Distraction(models.Model):
     description = models.TextField(blank=True)
     def __unicode__(self):
         return self.person.name + ' ' + str(self.duration )
+    @staticmethod
+    def getChartDistractions(date=None):
+
+        if date is None:
+            date = datetime.date.today()
+
+        #distractions = list(Distraction.objects.values('person').filter(time__gte=date).annotate(duration=Sum('duration')))
+        distractions = list(Distraction.objects.values('person','duration').filter(time__gte=date).order_by('time'))
+        distraction_day_data = [
+            ['Range'],
+            ['Today']
+        ]
+        distraction_day_colors = []
+        total = 0
+        for d in distractions:
+            p = Person.objects.get(pk=d['person'])
+            distraction_day_data[0].append(p.name)
+            distraction_day_data[1].append(d['duration'])
+            total += d['duration']
+            distraction_day_colors.append({'color':'#'+p.color})
+
+        distraction_day_data = json.dumps(distraction_day_data)
+        distraction_day_colors = json.dumps(distraction_day_colors)
+
+        return {'data':distraction_day_data,'colors':distraction_day_colors,'total':total }
+
+
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -42,3 +72,11 @@ class Settings(models.Model):
     value = models.TextField()
     def __unicode__(self):
         return self.name
+    @staticmethod
+    def getSetting(key,default=None):
+        try:
+            val=Settings.objects.get(name=key).value
+        except Settings.DoesNotExist:
+            val=default
+
+        return val

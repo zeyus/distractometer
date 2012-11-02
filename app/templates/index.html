@@ -3,17 +3,24 @@
 {% block content %}
 <div class="row-fluid">
     <div class="span6">
-        <h3>Today's Distractions<h3>
-        <div id="distractions_day" style="height:100%"></div>
+        <h3>Today's Distractions</h3>
+        <div class="row-fluid">
+            <div class="span6"><div id="distractions_day" style="height:100%"></div></div>
+            <div class="span6"><div id="distractions_day_total" style="height:100%"></div></div>
+        </div>
     </div>
     <div class="span6">
         <h3>Week's Trend</h3>
-        <div id="distractions_week" style="height:100%"></div>
+        <div id="distractions_week" style="height:100%;"></div>
     </div>
 </div>
 {% endblock %}
 
 {% block charts %}
+    <script type="text/javascript">
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', {'packages':['corechart','gauge']});
+    </script>
     {% include "distractions.day.html" %}
     {% include "distractions.week.html" %}
 {% endblock %}
