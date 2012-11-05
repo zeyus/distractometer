@@ -8,10 +8,10 @@
         new google.visualization.ColumnChart(document.getElementById('distractions_day')).draw(data,
             {title:null,
             width:'100%', height:'100%',
-            hAxis: {},
+            hAxis: {textPosition:'none'},
             isStacked:true,
             vAxis: {textPosition:'none',baselineColor:'#ffffff',gridlines:{count:0}},
-            legend: {position:'none'},
+            legend: {position:'bottom'},
             series: {{day_colors|safe}}
             }
         );
