@@ -42,6 +42,61 @@ class Distraction(models.Model):
 
         return {'data':distraction_day_data,'colors':distraction_day_colors,'total':total }
 
+    @staticmethod
+    def getChartDistractionsWeek(date=None):
+        trend_end = 4
+
+        if date is None:
+            today = datetime.date.today()
+            if today.weekday() < 5:
+                trend_end = today.weekday() - 1
+            monday = today - datetime.timedelta(days=today.weekday())
+            friday = monday + datetime.timedelta(days=5)
+            #date = datetime.date.today()
+        else:
+            monday = date - datetime.timedelta(days=date.weekday())
+            friday = monday + datetime.timedelta(days=5)
+
+        distractions = Distraction.objects.filter(time__gte=monday, time__lte=friday).extra(
+            select = {"date": """DATE(time)"""}).values('date').annotate(duration=Sum('duration'))
+
+        #distractions_week = []
+        #for d in distractions:
+        #    distractions_week.append({'date': d['date'],'duration': d['duration']})
+
+        per_day = {}
+        for d in distractions:
+            per_day[str(d['date'])] = d['duration']
+
+        d = 0
+        per_day_list = []
+        trend_vals = []
+        while d < 5:
+            day = monday + datetime.timedelta(days=d)
+            day=str(day)
+            if not per_day.has_key(day):
+                per_day[day] = 0
+
+            trend_vals.append(int(per_day[day]))
+            per_day_list.append({'date':day,'duration':per_day[day]})
+            d += 1
+
+
+        if trend_end > 0:
+            trend_vals = trend_vals[0:trend_end]
+
+            a,b = linreg(range(len(trend_vals)),trend_vals)
+            #if trend_end < 4:
+            #    trend_line=[a*index + b for index in range(5)]
+            for k,day in enumerate(per_day_list):
+                per_day_list[k]['trendline'] = max(a*(k+1)+b,0)
+        else:
+            for k,day in enumerate(per_day_list):
+                per_day_list[k]['trendline'] = 0
+
+
+        return per_day_list
+
 
 
 
@@ -80,3 +135,20 @@ class Settings(models.Model):
             val=default
 
         return val
+
+
+
+def linreg(X, Y):
+    """
+    return a,b in solution to y = ax + b such that root mean square distance between trend line and original points is minimized
+    """
+    N = len(X)
+    Sx = Sy = Sxx = Syy = Sxy = 0.0
+    for x, y in map(None, X, Y):
+        Sx = Sx + x
+        Sy = Sy + y
+        Sxx = Sxx + x*x
+        Syy = Syy + y*y
+        Sxy = Sxy + x*y
+    det = Sxx * N - Sx * Sx
+    return (Sxy * N - Sy * Sx)/det, (Sxx * Sy - Sx * Sxy)/det
