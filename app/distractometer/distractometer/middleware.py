@@ -6,7 +6,7 @@ class LoginFormMiddleware(object):
 
         # if the top login form has been posted
         if request.method == 'POST':
-
+            print 'hihihi'
             # validate the form
             form = AuthenticationForm(prefix='login', data=request.POST)
             if form.is_valid():

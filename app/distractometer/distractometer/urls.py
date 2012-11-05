@@ -6,6 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'distractometer.views.index'),
+    url(r'^logout/?$', 'distractometer.views.logout_view'),
     # Examples:
     # url(r'^$', 'distractometer.views.home', name='home'),
     # url(r'^distractometer/', include('distractometer.foo.urls')),

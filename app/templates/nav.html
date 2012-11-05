@@ -1,11 +1,19 @@
 {% load bootstrap %}
+{% if not user.is_authenticated %}
 <ul class="nav pull-right">
     <li class="dropdown">
         <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
         <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
             <form method="POST" action="/">
                 {{ request.login_form|bootstrap }}
+                <input type="submit" value="Login" />
+                {% csrf_token %}
             </form>
         </div>
     </li>
 </ul>
+{% else %}
+    <ul class="nav pull-right">
+        <li><a href="/logout">logout {{ user.username }}</a></li>
+    </ul>
+{% endif %}
