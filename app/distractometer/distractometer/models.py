@@ -30,11 +30,13 @@ class Distraction(models.Model):
         ]
         distraction_day_colors = []
         total = 0
+        multiplier = int(Settings.getSetting('distraction_multiplier',1))
         for d in distractions:
+            duration = multiplier*d['duration']
             p = Person.objects.get(pk=d['person'])
             distraction_day_data[0].append(p.name)
-            distraction_day_data[1].append(d['duration'])
-            total += d['duration']
+            distraction_day_data[1].append(duration)
+            total += duration
             distraction_day_colors.append({'color':'#'+p.color})
 
         distraction_day_data = json.dumps(distraction_day_data)
@@ -56,7 +58,6 @@ class Distraction(models.Model):
         else:
             monday = date - datetime.timedelta(days=date.weekday())
             friday = monday + datetime.timedelta(days=5)
-
         distractions = Distraction.objects.filter(time__gte=monday, time__lte=friday).extra(
             select = {"date": """DATE(time)"""}).values('date').annotate(duration=Sum('duration'))
 
@@ -65,8 +66,9 @@ class Distraction(models.Model):
         #    distractions_week.append({'date': d['date'],'duration': d['duration']})
 
         per_day = {}
+        multiplier = int(Settings.getSetting('distraction_multiplier',1))
         for d in distractions:
-            per_day[str(d['date'])] = d['duration']
+            per_day[str(d['date'])] = d['duration']*multiplier
 
         d = 0
         per_day_list = []
@@ -136,6 +138,9 @@ class Settings(models.Model):
 
         return val
 
+    @staticmethod
+    def getMaxDistractions():
+        return int(Settings.getSetting('staff_count',1))*60*60*int(Settings.getSetting('work_day_hours',8))
 
 
 def linreg(X, Y):
