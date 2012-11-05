@@ -46,12 +46,13 @@ class Distraction(models.Model):
 
     @staticmethod
     def getChartDistractionsWeek(date=None):
-        trend_end = 4
+        trend_end = 5
 
         if date is None:
             today = datetime.date.today()
             if today.weekday() < 5:
                 trend_end = today.weekday() - 1
+
             monday = today - datetime.timedelta(days=today.weekday())
             friday = monday + datetime.timedelta(days=5)
             #date = datetime.date.today()
