@@ -51,7 +51,7 @@ class Distraction(models.Model):
         if date is None:
             today = datetime.date.today()
             if today.weekday() < 5:
-                trend_end = today.weekday() - 1
+                trend_end = today.weekday()
 
             monday = today - datetime.timedelta(days=today.weekday())
             friday = monday + datetime.timedelta(days=5)
@@ -150,11 +150,13 @@ def linreg(X, Y):
     """
     N = len(X)
     Sx = Sy = Sxx = Syy = Sxy = 0.0
-    for x, y in map(None, X, Y):
+    for x, y in zip(X, Y):
         Sx = Sx + x
         Sy = Sy + y
         Sxx = Sxx + x*x
         Syy = Syy + y*y
         Sxy = Sxy + x*y
     det = Sxx * N - Sx * Sx
+    if det == 0:
+        return Sxy * N - Sy * Sx, Sxx * Sy - Sx * Sxy
     return (Sxy * N - Sy * Sx)/det, (Sxx * Sy - Sx * Sxy)/det
