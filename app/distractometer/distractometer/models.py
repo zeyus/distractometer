@@ -87,12 +87,12 @@ class Distraction(models.Model):
 
         if trend_end > 0:
             trend_vals = trend_vals[0:trend_end]
-
+            max_seconds = Settings.getMaxDistractions()
             a,b = linreg(range(len(trend_vals)),trend_vals)
             #if trend_end < 4:
             #    trend_line=[a*index + b for index in range(5)]
             for k,day in enumerate(per_day_list):
-                per_day_list[k]['trendline'] = max(a*(k+1)+b,0)
+                per_day_list[k]['trendline'] = min(max(a*(k+1)+b,0),max_seconds)
         else:
             for k,day in enumerate(per_day_list):
                 per_day_list[k]['trendline'] = 0
