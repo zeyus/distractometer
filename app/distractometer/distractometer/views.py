@@ -13,7 +13,7 @@ def index(request):
         if request.method == 'POST' and 'add_distraction' in request.POST:
             form = DistractionForm(prefix='distraction',data=request.POST)
             if form.is_valid():
-                pass
+                form.save()
         else:
             form = DistractionForm(prefix='distraction')
 
