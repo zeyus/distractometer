@@ -7,7 +7,7 @@ from .forms import DistractionForm
 import datetime,json
 
 def index(request):
-    show_add = request.user.has_perm('distraction.add_distraction')
+    show_add = request.user.has_perm('distractometer.add_distraction')
     form = None
     if show_add:
         if request.method == 'POST' and 'add_distraction' in request.POST:
