@@ -12,7 +12,7 @@ class Person(models.Model):
 class Distraction(models.Model):
 
     time = models.DateTimeField(default=datetime.datetime.now())
-    duration = models.IntegerField()
+    duration = models.IntegerField(default=60)
     person = models.ForeignKey(Person)
     description = models.TextField(blank=True)
     def __unicode__(self):
