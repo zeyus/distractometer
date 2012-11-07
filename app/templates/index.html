@@ -15,6 +15,7 @@
         <div id="distractions_week" style="height:100%;"></div>
     </div>
 </div>
+{% if user.is_authenticated and show_add %}
 <div class="row-fluid">
     <div class="span12">
         <form method="POST" action="/">
@@ -24,6 +25,7 @@
         </form>
     </div>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block charts %}

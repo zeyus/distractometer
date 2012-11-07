@@ -7,13 +7,15 @@ from .forms import DistractionForm
 import datetime,json
 
 def index(request):
-
-    if request.method == 'POST':
-        form = DistractionForm(prefix='distraction',data=request.POST)
-        if form.is_valid():
-            pass
-    else:
-        form = DistractionForm(prefix='distraction')
+    show_add = request.user.has_perm('distraction.add_distraction')
+    form = None
+    if show_add:
+        if request.method == 'POST' and 'add_distraction' in request.POST:
+            form = DistractionForm(prefix='distraction',data=request.POST)
+            if form.is_valid():
+                pass
+        else:
+            form = DistractionForm(prefix='distraction')
 
     distractions = Distraction.getChartDistractions()
 
@@ -30,7 +32,7 @@ def index(request):
     distractions_week = json.dumps(week)
 
 
-    return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds,'distraction_form':form}))
+    return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds,'distraction_form':form, 'show_add':show_add}))
 
 
 def logout_view(request):
