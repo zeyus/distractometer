@@ -10,7 +10,8 @@ class Person(models.Model):
         return self.name
 
 class Distraction(models.Model):
-    time = models.DateTimeField(auto_now_add=True)
+
+    time = models.DateTimeField(default=datetime.datetime.now())
     duration = models.IntegerField()
     person = models.ForeignKey(Person)
     description = models.TextField(blank=True)
@@ -92,7 +93,7 @@ class Distraction(models.Model):
             #if trend_end < 4:
             #    trend_line=[a*index + b for index in range(5)]
             for k,day in enumerate(per_day_list):
-                per_day_list[k]['trendline'] = min(max(a*(k+1)+b,0),max_seconds)
+                per_day_list[k]['trendline'] = min(max(a*k+b,0),max_seconds)
         else:
             for k,day in enumerate(per_day_list):
                 per_day_list[k]['trendline'] = 0

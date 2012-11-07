@@ -3,9 +3,17 @@ from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from .models import Settings, Distraction
+from .forms import DistractionForm
 import datetime,json
 
 def index(request):
+
+    if request.method == 'POST':
+        form = DistractionForm(prefix='distraction',data=request.POST)
+        if form.is_valid():
+            pass
+    else:
+        form = DistractionForm(prefix='distraction')
 
     distractions = Distraction.getChartDistractions()
 
@@ -22,9 +30,15 @@ def index(request):
     distractions_week = json.dumps(week)
 
 
-    return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds}))
+    return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds,'distraction_form':form}))
 
 
 def logout_view(request):
     logout(request)
+    return HttpResponseRedirect('/')
+
+def add_distraction(request):
+
+
+
     return HttpResponseRedirect('/')

@@ -4,9 +4,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    url(r'^$', 'distractometer.views.index'),
-    url(r'^logout/?$', 'distractometer.views.logout_view'),
+urlpatterns = patterns('distractometer.views',
+    url(r'^$', 'index'),
+    url(r'^logout/?$', 'logout_view'),
+    url(r'^distraction/add/?$', 'add_distraction'),
     # Examples:
     # url(r'^$', 'distractometer.views.home', name='home'),
     # url(r'^distractometer/', include('distractometer.foo.urls')),
