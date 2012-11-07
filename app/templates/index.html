@@ -15,17 +15,48 @@
         <div id="distractions_week" style="height:100%;"></div>
     </div>
 </div>
-{% if user.is_authenticated and show_add %}
 <div class="row-fluid">
-    <div class="span12">
-        <form method="POST" action="/">
+    <div class="span6">
+        <h3>Latest distractions</h3>
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="latest_distractions">
+            <thead>
+                <tr>
+                    <th>
+                        Time
+                    </th>
+                    <th>
+                        Person
+                    </th>
+                    <th>
+                        Duration
+                    </th>
+                </tr>
+            </thead>
+            {% for d in latest_distractions %}
+                <tr class="{% cycle 'row1' 'row2' %}">
+                    <td>{{ d.time|date:"d/m/Y H:i:s" }}</td>
+                    <td>{{ d.person }}</td>
+                    <td>{{ d.duration }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% if user.is_authenticated and show_add %}
+    <div class="span6">
+        <h3>Add Distraction</h3>
+        <form method="POST" action="/" class="form-horizontal">
             {{ distraction_form|bootstrap }}
             <input type="submit" name="add_distraction" value="Add" />
             {% csrf_token %}
         </form>
     </div>
-</div>
+ {% else %}
+    <div class="span6">
+
+    </div>
 {% endif %}
+</div>
+
 {% endblock %}
 
 {% block charts %}

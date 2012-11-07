@@ -23,11 +23,10 @@ class Distraction(models.Model):
         if date is None:
             date = datetime.date.today()
 
-        #distractions = list(Distraction.objects.values('person').filter(time__gte=date).annotate(duration=Sum('duration')))
         distractions = list(Distraction.objects.values('person','duration').filter(time__gte=date).order_by('time'))
         distraction_day_data = [
-            ['Range'],
-            ['Today']
+            ['Range', ''],
+            ['Today', 0]
         ]
         distraction_day_colors = []
         total = 0
@@ -56,16 +55,11 @@ class Distraction(models.Model):
 
             monday = today - datetime.timedelta(days=today.weekday())
             friday = monday + datetime.timedelta(days=5)
-            #date = datetime.date.today()
         else:
             monday = date - datetime.timedelta(days=date.weekday())
             friday = monday + datetime.timedelta(days=5)
         distractions = Distraction.objects.filter(time__gte=monday, time__lte=friday).extra(
             select = {"date": """DATE(time)"""}).values('date').annotate(duration=Sum('duration'))
-
-        #distractions_week = []
-        #for d in distractions:
-        #    distractions_week.append({'date': d['date'],'duration': d['duration']})
 
         per_day = {}
         multiplier = int(Settings.getSetting('distraction_multiplier',1))
@@ -90,8 +84,7 @@ class Distraction(models.Model):
             trend_vals = trend_vals[0:trend_end]
             max_seconds = Settings.getMaxDistractions()
             a,b = linreg(range(len(trend_vals)),trend_vals)
-            #if trend_end < 4:
-            #    trend_line=[a*index + b for index in range(5)]
+
             for k,day in enumerate(per_day_list):
                 per_day_list[k]['trendline'] = min(max(a*k+b,0),max_seconds)
                 if today.weekday() > k:

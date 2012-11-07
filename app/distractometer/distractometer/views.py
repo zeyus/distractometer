@@ -31,8 +31,10 @@ def index(request):
 
     distractions_week = json.dumps(week)
 
+    latest_distractions = list(Distraction.objects.all().order_by('time')[:10])
 
-    return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds,'distraction_form':form, 'show_add':show_add}))
+
+    return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds,'distraction_form':form, 'show_add':show_add, 'latest_distractions':latest_distractions}))
 
 
 def logout_view(request):
