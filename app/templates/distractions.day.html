@@ -3,6 +3,10 @@
     function drawVisualization() {
         // Create and populate the data table.
         var data = google.visualization.arrayToDataTable({{day|safe}});
+        //var data = new google.visualization.DataTable();
+        //data.addColumn('string', 'Person');
+        //data.addColumn('number', 'Duration');
+        //data.addRows();
 
         // Create and draw the visualization.
         new google.visualization.ColumnChart(document.getElementById('distractions_day')).draw(data,

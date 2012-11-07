@@ -94,9 +94,14 @@ class Distraction(models.Model):
             #    trend_line=[a*index + b for index in range(5)]
             for k,day in enumerate(per_day_list):
                 per_day_list[k]['trendline'] = min(max(a*k+b,0),max_seconds)
+                if today.weekday() > k:
+                    per_day_list[k]['certainty'] = True
+                else:
+                    per_day_list[k]['certainty'] = False
         else:
             for k,day in enumerate(per_day_list):
                 per_day_list[k]['trendline'] = 0
+                per_day_list[k]['certainty'] = 'false'
 
 
         return per_day_list

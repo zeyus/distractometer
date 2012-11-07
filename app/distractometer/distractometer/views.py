@@ -27,7 +27,7 @@ def index(request):
 
     week = []
     for day in distractions_week:
-        week.append([day['date'],day['duration'],day['trendline']])
+        week.append([day['date'],day['duration'],day['trendline'],day['certainty']])
 
     distractions_week = json.dumps(week)
 

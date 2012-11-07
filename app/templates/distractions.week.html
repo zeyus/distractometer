@@ -16,6 +16,7 @@
         data.addColumn('string', 'Date');
         data.addColumn('number', 'Distractions');
         data.addColumn('number', 'Trend');
+        data.addColumn({type:'boolean',role:'certainty'});
         data.addRows(
             {{week|safe}}
         );
