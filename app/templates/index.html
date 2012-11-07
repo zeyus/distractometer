@@ -30,6 +30,9 @@
                     <th>
                         Duration
                     </th>
+                    <th>
+                        Description
+                    </th>
                 </tr>
             </thead>
             {% for d in latest_distractions %}
@@ -37,6 +40,7 @@
                     <td>{{ d.time|date:"d/m/Y H:i:s" }}</td>
                     <td>{{ d.person }}</td>
                     <td>{{ d.duration }}</td>
+                    <td>{{ d.description }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -58,7 +62,6 @@
 </div>
 
 {% endblock %}
-
 {% block charts %}
     <script type="text/javascript">
         // Load the Visualization API and the piechart package.
