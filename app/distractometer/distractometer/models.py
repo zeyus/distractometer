@@ -24,18 +24,18 @@ class Distraction(models.Model):
             date = datetime.date.today()
 
         distractions = list(Distraction.objects.values('person','duration').filter(time__gte=date).order_by('time'))
-        distraction_day_data = [
-            ['Range', ''],
-            ['Today', 0]
-        ]
-        distraction_day_colors = []
+        distraction_day_data = {
+            'cols':[{'id':'Range','label':'Duration', 'type':'string'}, {'id':'emptyentry','label':'','type':'number'}],
+            'rows':[{'c':[{'v':'Today'}, {'v':0}]}]
+            }
+        distraction_day_colors = [{'color':'#000000'},]
         total = 0
         multiplier = int(Settings.getSetting('distraction_multiplier',1))
         for d in distractions:
             duration = multiplier*d['duration']
             p = Person.objects.get(pk=d['person'])
-            distraction_day_data[0].append(p.name)
-            distraction_day_data[1].append(duration)
+            distraction_day_data['cols'].append({'id':p.name,'label':p.name,'type':'number'})
+            distraction_day_data['rows'][0]['c'].append({'v':duration,'f':str(datetime.timedelta(seconds=d['duration']))})
             total += duration
             distraction_day_colors.append({'color':'#'+p.color})
 

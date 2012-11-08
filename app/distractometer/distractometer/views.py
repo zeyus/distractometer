@@ -13,7 +13,11 @@ def index(request):
         if request.method == 'POST' and 'add_distraction' in request.POST:
             form = DistractionForm(prefix='distraction',data=request.POST)
             if form.is_valid():
-                form.save()
+                distraction = form.save(commit=False)
+                distraction.duration *= 60
+                distraction.save()
+                form.save_m2m()
+                return HttpResponseRedirect('/')
         else:
             form = DistractionForm(prefix='distraction')
 
@@ -30,8 +34,8 @@ def index(request):
         week.append([day['date'],day['duration'],day['trendline'],day['certainty']])
 
     distractions_week = json.dumps(week)
-
-    latest_distractions = list(Distraction.objects.all().order_by('time')[:10])
+    date = datetime.date.today()
+    latest_distractions = list(Distraction.objects.filter(time__gte=date).order_by('time')[:10])
 
 
     return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds,'distraction_form':form, 'show_add':show_add, 'latest_distractions':latest_distractions}))

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap %}
+{% load timefromseconds %}
 {% block title %}Distract me not!{% endblock %}
 {% block content %}
 <div class="row-fluid">
@@ -39,7 +40,7 @@
                 <tr class="{% cycle 'row1' 'row2' %}">
                     <td>{{ d.time|date:"d/m/Y H:i:s" }}</td>
                     <td>{{ d.person }}</td>
-                    <td>{{ d.duration }}</td>
+                    <td>{{ d.duration|timefromseconds }}</td>
                     <td>{{ d.description }}</td>
                 </tr>
             {% endfor %}
@@ -50,7 +51,9 @@
         <h3>Add Distraction</h3>
         <form method="POST" action="/" class="form-horizontal">
             {{ distraction_form|bootstrap }}
-            <input type="submit" name="add_distraction" value="Add" />
+            <div class="form-actions">
+                <input type="submit" name="add_distraction" class="btn btn-primary" value="Add" />
+            </div>
             {% csrf_token %}
         </form>
     </div>
