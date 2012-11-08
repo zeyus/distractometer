@@ -14,10 +14,8 @@ class LoginFormMiddleware(object):
                 from django.contrib.auth import login
                 login(request, login_form.get_user())
 
-                # if this is the logout page, then redirect to /
-                # so we don't get logged out just after logging in
-                if '/account/logout/' in request.get_full_path():
-                    return HttpResponseRedirect('/')
+
+                return HttpResponseRedirect('/')
 
 
 
