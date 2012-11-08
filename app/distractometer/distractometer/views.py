@@ -35,7 +35,7 @@ def index(request):
 
     distractions_week = json.dumps(week)
     date = datetime.date.today()
-    latest_distractions = list(Distraction.objects.filter(time__gte=date).order_by('time')[:10])
+    latest_distractions = list(Distraction.objects.filter(time__gte=date).order_by('-time')[:10])
 
 
     return render_to_response('index.html', RequestContext(request,{'week':distractions_week,'day':distractions['data'],'day_colors':distractions['colors'],'gauge':gauge,'max':max_seconds,'distraction_form':form, 'show_add':show_add, 'latest_distractions':latest_distractions}))
