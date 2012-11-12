@@ -94,7 +94,7 @@ class Distraction(models.Model):
         else:
             for k,day in enumerate(per_day_list):
                 per_day_list[k]['trendline'] = 0
-                per_day_list[k]['certainty'] = 'false'
+                per_day_list[k]['certainty'] = False
 
 
         return per_day_list
